@@ -1,0 +1,7 @@
+Flask==0.10.1
+Flask-PyMongo==0.3.0
+greenlet==0.4.1
+ujson==1.33
+werkzeug==0.9.4
+Jinja2==2.8
+Redis==2.8.3
