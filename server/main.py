@@ -5,7 +5,7 @@ from werkzeug.serving import run_with_reloader
 from werkzeug.debug import DebuggedApplication
 from werkzeug.contrib.profiler import ProfilerMiddleware
 from werkzeug.exceptions import NotFound
-from werkzeug.wrappers import Request,Response
+#from werkzeug.wrappers import Request,Response
 #from utils import Foo,Bar,hello
 import utils
 
@@ -20,32 +20,19 @@ config['static_dist_dir'] = config['root_dir']+'/../statc/dist'
 config['static_tmp_dir'] = config['root_dir']+'/../static/.tmp'
 
 
-class Mid(object):
+class MidApp(object):
 	def __init__(self,app):
 		print "__init__"
 		self.app=app
+	def process_response(self, request, response):
+		print "__process_response"
+		return response	
 	def __call__(self,environ,start_response):
 		def custom_start_response(status,headers,exc_info=None):
 			print "__call__"
-			print exc_info
-			response=start_response('200 OK',[('Content-Type','text/plain')])
-			return response
+			return start_response(status,[('Content-Type','text/plain')])
 		return self.app(environ,custom_start_response)
-		"""
-		def custom_start_response(status,headers,exc_info=None):
-			req = Request(environ,shallow=True)
-			print req
-			#print exc_info
-			#print headers
-			#print environ
-			#print "script_name?"+environ['SCRIPT_NAME']
-			#print "query?"+environ['QUERY_STRING']
-			#print "path_info?"+environ['PATH_INFO']
-			#print "content_type?"+environ['CONTENT_TYPE']
-			start_response(status,headers,exc_info)
-			return "oops"
-		return self.app(environ,custom_start_response)
-		"""
+		#return self.app(environ,start_response)
 
 def simple_app(environ,start_response):
 	status = "200 OK"
@@ -67,6 +54,7 @@ def simple_app(environ,start_response):
 class MyFlask(Flask):
 	#overwrite static file mapping for develop
 	def send_static_file(self,filename):
+		print "send_static_file"
 		#scan below dictionary
 		if not self.has_static_folder:
 			return RuntimeError('No static folder for this object')
@@ -78,6 +66,7 @@ class MyFlask(Flask):
 			return send_from_directory(self.static_folder, filename,cache_timeout=cache_timeout)
 		#scan app file
 		filepath="{}/{}".format(config['static_app_dir'],filename)
+		print filepath
 		if os.path.exists(filepath) and  os.path.isfile(filepath):
 			return send_from_directory(config['static_app_dir'], filename,cache_timeout=cache_timeout)
 		#scan .tmp file
@@ -85,7 +74,27 @@ class MyFlask(Flask):
 		if os.path.exists(filepath) and os.path.isfile(filepath):
 			return send_from_directory(config['static_tmp_dir'], filename,cache_timeout=cache_timeout)
 		raise NotFound()
-	
+
+
+	def make_response(self,rv):
+		print "make_response"
+		print rv
+		r=super(MyFlask,self).make_response(rv)
+		if r.mimetype=="text/html":
+			pass
+		r.mimetype="text/plain"
+		return r
+	def process_response(self,response):
+		print "process_response"
+		#response.data += "... This is added" # but should I modify `data`?
+		#response=super(Flask,self).process_response(response)
+		#response = super(Flask,self).process_response(response)
+		response = super(MyFlask,self).process_response(response)
+		print response.mimetype
+		print response.status_code	
+		print response.headers
+		r=response
+		return response
 #end MyFlask
 app=MyFlask(__name__)
 
@@ -94,9 +103,6 @@ app=MyFlask(__name__)
 def hello_world():
 	return 'this is index'
 
-@app.route('/version')
-def get_version():
-	return "test"
 
 @app.route('/test_static')
 def test_static():
@@ -106,15 +112,15 @@ def test_static():
 
 #=server run===
 if __name__ == '__main__':
-	#app.debug=True
-	#app.run()
+	app.debug=True
+	app.run()
 
 	#package app by middleWare
-	midApp=Mid(app)
 
+	"""
 	if config['debug']:
 		#debugMode
-		wsgiApp= DebuggedApplication(midApp)
+		wsgiApp= DebuggedApplication(app)
 		@run_with_reloader
 		def run_server():
 			#http_server=WSGIServer(('',5000),Mid(simple_app))
@@ -123,6 +129,7 @@ if __name__ == '__main__':
 		run_server()
 	else:
 		#production
-		http_server=WSGIServer(('',5000),midApp)
+		http_server=WSGIServer(('',5000),app)
 		http_server.serve_forever()
+	"""
 
