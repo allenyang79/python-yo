@@ -1,0 +1,33 @@
+!!! 5
+html(lang="en-US")
+	meta(charset='UTF-8')
+	//meta(http-equiv='refresh', content='1;url=/login.html')
+	meta(name="viewport",content="width=device-width")
+	title Appier Richmedia Toolkit
+	script(src="scripts/plugins/modernizr.min.js")
+
+	
+	// build:css({.tmp,app}) styles/main.css
+	link(href="styles/bootstrap.min.css",rel="stylesheet")
+	link(href="styles/main.css",rel="stylesheet")
+	// endbuild	
+	body
+		div.container
+			header
+				block head
+					h1 Appier Richmedia Toolkit
+		div.container
+			block content
+		div.container	
+			block footer
+				// footer this is footer
+
+		// build:js({.tmp,app}) scripts/plugins.js
+		script(src="scripts/plugins/jquery.min.js")
+		script(src="scripts/plugins/bootstrap.min.js")
+		// endbuild
+		// build:js({.tmp,app}) scripts/main.js
+		block footer-js
+			script(src="scripts/main.js")
+		// endbuild
+

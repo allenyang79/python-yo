@@ -1,0 +1,37 @@
+extends base
+block content
+	h2 Project-Creative Edit
+
+	div(class="form")
+		fieldset
+			legend Edit
+			label ProjectName
+			input(class="input-xxlarge",type="text")
+
+			label URL 
+			input(class="input-xxlarge",type="text")
+
+			label click-thrugh-URL
+			input(class="input-xxlarge",type="text")
+
+			label beacon code
+			input(class="input-xxlarge",type="text")
+
+			label richmedia-info
+			textarea(class="input-xxlarge")
+			span(class="help-block") input a json string and it will be replace ${richmedia-info}
+
+			label(class="checkbox")
+				input(class="inject_weinre",type="checkbox")
+				| inject remote js console(weinre)
+			button(class="btn",type="button") Save
+
+block footer-js
+	script(src="scripts/project_edit.js")
+
+
+
+
+
+
+
