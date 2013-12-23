@@ -30,14 +30,12 @@ app.static_folder_mapping=config['static_folder_mapping']
 @app.route('/')
 def index():
 	return 'this is index'
-
-@app.route('/foo')
-def foo():
-	return 'this is foo'
-@app.route('/bar')
-def bar():
-	return 'this is var'
-
+@app.route('/project/list')
+def project_list():
+	return 'this is project list'
+@app.route('/project/edit')
+def project_edit():
+	return 'this is project edit'
 
 
 #==run flask app===
@@ -49,6 +47,8 @@ if __name__ == '__main__':
 
 	if config['debug']:
 		#debugMode
+		#middleWare
+		#app=Static_Assets_Middleware(app)
 		app=Livereload_Middleware(app)
 		wsgiApp= DebuggedApplication(app)
 		@run_with_reloader

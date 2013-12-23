@@ -55,43 +55,14 @@ class Livereload_Middleware(object):
 #  a wsgi middleware that will map static file to another folder
 ###
 class Static_Assets_Middleware(object):
-	def __init__(self,app,oApp):
+	def __init__(self,app):
 		self.app=app
-		self.oApp=oApp
 	def __call__(self,environ,start_response):
-
-		start_response_args = []
-		#fake response output
-		def dummy_start_response(status, headers, exc_info=None):
-			print "[Static_Assets_Flask]dummy_start_response" 
-			start_response_args.append(status)
-			start_response_args.append(headers)
-			start_response_args.append(exc_info)
-
-		#fake start_response
-		self.app(environ,dummy_start_response)
-
-		#check static file
-		path_info=environ['PATH_INFO']
-		match = re.search(r'/static/(.*)', path_info)
-		if match.group(1):
-			filename=match.group(1)
-			if start_response_args[0][:3]=='404':
-				folders=['/Users/appier-user/Desktop/project/python/creative/static/app']
-				for folder in folders:
-					filepath="{}/{}".format(folder,filename)
-					if os.path.exists(filepath) and os.path.isfile(filepath):
-						pass
-						#print self.app
-						#print self.app.current_app
-						#print current_app
-						#print filename
-						#current_app.send_file(filepath)
-						#cache_timeout = self.app.get_send_file_max_age(filename)
-						#r=send_from_directory(folder, filename,cache_timeout=cache_timeout)
-						#print r
+		print "[Static_Assets_Middleware]"
+		print environ['PATH_INFO']
+		print environ['SCRIPT_NAME']
 		return self.app(environ,start_response)
-
+		
 ###
 #   map static folder with yeoman
 #   map static file to yeoman app folder or .tmp folder
@@ -100,7 +71,7 @@ class Static_Assets_Flask(Flask):
 	#overwrite static file mapping for develop
 	def send_static_file(self,filename):
 		print "[Static_Assets_Flask]send_static_file"
-
+		#return super(Static_Assets_Flask,self).send_static_file(filename)
 		#scan below dictionary
 		if not self.has_static_folder:
 			return RuntimeError('No static folder for this object')
@@ -115,6 +86,5 @@ class Static_Assets_Flask(Flask):
 			print filepath
 			if os.path.exists(filepath) and os.path.isfile(filepath):
 				r=send_from_directory(folder, filename,cache_timeout=cache_timeout)
-				print r
 				return r
 		raise NotFound()
