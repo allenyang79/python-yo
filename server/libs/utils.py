@@ -37,7 +37,8 @@ class Livereload_Middleware(object):
 		for line in app_iter:
 			#output.write(line)
 			output+=line
-
+		if hasattr(app_iter, 'close'):
+			app_iter.close()
 		output=re.sub("(<\/body>)",self.lr_snippet+"\\1",output)
 
 		#header and body
@@ -59,8 +60,11 @@ class Static_Assets_Middleware(object):
 		self.app=app
 	def __call__(self,environ,start_response):
 		print "[Static_Assets_Middleware]"
+		print self.app
 		print environ['PATH_INFO']
 		print environ['SCRIPT_NAME']
+		#detect 404 static file to remap
+
 		return self.app(environ,start_response)
 		
 ###
@@ -83,7 +87,6 @@ class Static_Assets_Flask(Flask):
 			folders+=self.static_folder_mapping
 		for folder in folders:
 			filepath="{}/{}".format(folder,filename)
-			print filepath
 			if os.path.exists(filepath) and os.path.isfile(filepath):
 				r=send_from_directory(folder, filename,cache_timeout=cache_timeout)
 				return r

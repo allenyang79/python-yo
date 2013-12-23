@@ -6,3 +6,4 @@ werkzeug==0.9.4
 Jinja2==2.8
 Redis==2.8.3
 gevent==1.0
+pymongo==2.1.1
