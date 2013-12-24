@@ -28,9 +28,10 @@ if len(sys.argv)==1:
 	config={}
 	config['mode']='dev'
 	config['debug']=True
-	#config['host']='ec2-184-169-246-66.us-west-1.compute.amazonaws.com' #'184.169.246.66'
-	config['host']='0.0.0.0'
-	config['port']=80
+	config['host']='ec2-184-169-246-66.us-west-1.compute.amazonaws.com' #'184.169.246.66'
+	config['port']=5000
+	#config['host']='0.0.0.0'
+	#config['port']=5000
 	config['root_dir'] = os.path.dirname(os.path.abspath(__file__));
 	config['static_folder']="static"
 	config['static_folder_mapping'] = [config['root_dir']+'/../static/app', config['root_dir']+'/../static/.tmp']
@@ -84,7 +85,7 @@ app.config['SERVER_PORT']=config['port']
 #########################
 @app.route('/')
 def index():
-	return 'this is index'
+	return 'appier richmedia toolkit'
 ####################
 #   Project
 ####################
@@ -229,7 +230,8 @@ if __name__ == '__main__':
 
 	if config['debug']:
 		#debugMode
-		app.debug=True
+		#app.debug=True
+		#app.run(host=config['host'],port=config['port'])
 		#middleWare
 		app=Static_Assets_Middleware(app)
 		lr_snippet="""
