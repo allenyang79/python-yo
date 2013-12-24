@@ -29,6 +29,7 @@ if len(sys.argv)==1:
 	config['mode']='dev'
 	config['debug']=True
 	config['host']='localhost'
+	config['port']=5000
 	config['root_dir'] = os.path.dirname(os.path.abspath(__file__));
 	config['static_folder']="static"
 	config['static_folder_mapping'] = [config['root_dir']+'/../static/app', config['root_dir']+'/../static/.tmp']
@@ -43,6 +44,7 @@ elif len(sys.argv)>1 and sys.argv[1]=='production':
 	config['mode']='production'
 	config['debug']=False
 	config['host']='localhost'
+	config['port']=5000
 	config['root_dir'] = os.path.dirname(os.path.abspath(__file__));
 	config['static_folder']=config['root_dir']+'/../static/dist'
 	config['static_folder_mapping'] = [config['root_dir']+'/../static/app', config['root_dir']+'/../static/.tmp']
@@ -234,10 +236,10 @@ if __name__ == '__main__':
 		@run_with_reloader
 		def run_server():
 			#http_server=WSGIServer(('',5000),Mid(simple_app))
-			http_server=WSGIServer(('',5000),wsgiApp)
+			http_server=WSGIServer(('',config['port']),wsgiApp)
 			http_server.serve_forever()
 		run_server()
 	else:
 		#production
-		http_server=WSGIServer(('',5000),app)
+		http_server=WSGIServer(('',config['port']),app)
 		http_server.serve_forever()
