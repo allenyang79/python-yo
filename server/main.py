@@ -28,8 +28,9 @@ if len(sys.argv)==1:
 	config={}
 	config['mode']='dev'
 	config['debug']=True
-	config['host']='localhost'
-	config['port']=5000
+	#config['host']='ec2-184-169-246-66.us-west-1.compute.amazonaws.com' #'184.169.246.66'
+	config['host']='0.0.0.0'
+	config['port']=80
 	config['root_dir'] = os.path.dirname(os.path.abspath(__file__));
 	config['static_folder']="static"
 	config['static_folder_mapping'] = [config['root_dir']+'/../static/app', config['root_dir']+'/../static/.tmp']
@@ -44,7 +45,7 @@ elif len(sys.argv)>1 and sys.argv[1]=='production':
 	config['mode']='production'
 	config['debug']=False
 	config['host']='localhost'
-	config['port']=5000
+	config['port']=80
 	config['root_dir'] = os.path.dirname(os.path.abspath(__file__));
 	config['static_folder']=config['root_dir']+'/../static/dist'
 	config['static_folder_mapping'] = [config['root_dir']+'/../static/app', config['root_dir']+'/../static/.tmp']
@@ -75,6 +76,8 @@ db=get_db()
 app=Static_Assets_Flask(__name__)
 app.static_folder=config['static_folder']
 app.static_folder_mapping=config['static_folder_mapping']
+app.config['SERVER_HOST']=config['host']
+app.config['SERVER_PORT']=config['port']
 
 #########################
 #   end point setting
@@ -219,7 +222,9 @@ def project_test():
 if __name__ == '__main__':
 	#flask run
 	#app.debug=True
-	#app.run()
+	#app.host=config['host']
+	#app.port=config['port']
+	#app.run(host=config['host'],port=config['port'])
 	#package app by middleWare
 
 	if config['debug']:
@@ -236,7 +241,7 @@ if __name__ == '__main__':
 		@run_with_reloader
 		def run_server():
 			#http_server=WSGIServer(('',5000),Mid(simple_app))
-			http_server=WSGIServer(('',config['port']),wsgiApp)
+			http_server=WSGIServer((config['host'],config['port']),wsgiApp)
 			http_server.serve_forever()
 		run_server()
 	else:
