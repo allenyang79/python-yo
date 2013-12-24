@@ -11,6 +11,8 @@ html(lang="en-US")
 	link(href="styles/bootstrap.min.css",rel="stylesheet")
 	link(href="styles/main.css",rel="stylesheet")
 	// endbuild	
+	link(href="//cdnjs.cloudflare.com/ajax/libs/select2/3.4.4/select2.css",rel="stylesheet")
+	link(href="//cdnjs.cloudflare.com/ajax/libs/select2/3.4.4/select2-bootstrap.css",rel="stylesheet")
 	body
 		div.container
 			header
@@ -25,9 +27,9 @@ html(lang="en-US")
 		// build:js({.tmp,app}) scripts/plugins.js
 		script(src="scripts/plugins/jquery.min.js")
 		script(src="scripts/plugins/bootstrap.min.js")
+		script(src="scripts/plugins/underscore-min.js")
+		script(src="scripts/plugins/uri.min.js")				
+		script(src="scripts/plugins/select2.min.js")				
 		// endbuild
-		// build:js({.tmp,app}) scripts/main.js
 		block footer-js
-			script(src="scripts/main.js")
-		// endbuild
 

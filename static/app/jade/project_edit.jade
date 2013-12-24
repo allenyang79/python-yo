@@ -1,31 +1,51 @@
 extends base
 block content
-	h2 Project-Creative Edit
+	div(class="page-project-creative-edit")
+		h2 Project-Creative Edit
+		div(class="form")
+			fieldset
+				legend Edit
 
-	div(class="form")
-		fieldset
-			legend Edit
-			label ProjectName
-			input(class="input-xxlarge",type="text")
+				label Proejct ID
+				input(class="input-xxlarge",type="text",name="project_id",readonly=true)
 
-			label URL 
-			input(class="input-xxlarge",type="text")
+				label Proejct Name
+				input(class="input-xxlarge",type="text",name="name")
 
-			label click-thrugh-URL
-			input(class="input-xxlarge",type="text")
+				label Public
+				label(class="radio inline")
+					input(class="",type="radio",value="true",name="public") 
+					| Yes
+				label(class="radio inline")
+					input(class="",type="radio",value="false",name="public") 
+					| No
 
-			label beacon code
-			input(class="input-xxlarge",type="text")
+				label(class="select inlne") Templaet_type
+				input(class="input-xxlarge",type="text",name="template_type")
 
-			label richmedia-info
-			textarea(class="input-xxlarge")
-			span(class="help-block") input a json string and it will be replace ${richmedia-info}
 
-			label(class="checkbox")
-				input(class="inject_weinre",type="checkbox")
-				| inject remote js console(weinre)
-			button(class="btn",type="button") Save
+				label URL 
+				input(class="input-xxlarge",type="text",name="url")
 
+				label _ASSETS_ Replace
+				input(class="input-xxlarge",type="text",name="assets_url")
+
+				label click-through-URL
+				input(class="input-xxlarge",type="text",name="click_through_url")
+
+				label beacon1
+				input(class="input-xxlarge",type="text",name="beacon1")
+
+				label richmedia-info
+				textarea(class="input-xxlarge",name="richmedia_info")
+				span(class="help-block") input a json string and it will be replace ${richmedia-info}
+
+				label inject-snippet
+				textarea(class="input-xxlarge",name="inject_snippet")
+				span(class="help-block",name="inject_snippet") input a json string and it will be replace ${richmedia-info}
+			
+				button(class="btn btn-submit",type="button") Save
+				a(class="btn btn-mraid-preview",type="button",href="",target="_blank") MRAID Preview
 block footer-js
 	script(src="scripts/project_edit.js")
 

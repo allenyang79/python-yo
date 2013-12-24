@@ -132,7 +132,7 @@ module.exports = function (grunt) {
 						expand: true,
 						cwd: '<%= yeoman.app %>/scripts',
 						src: '{,*/}*.coffee',
-						dest: '.tmp/scripts',
+						dest: 'dist/scripts',
 						ext: '.js'
 				}]
 			},
@@ -225,6 +225,7 @@ module.exports = function (grunt) {
 				assetsDirs: ['<%= yeoman.dist %>']
 			},
 			html: ['<%= yeoman.dist %>/{,*/}*.html'],
+			//js: ['<%= yeoman.dist %>/scripts/{,*/}*.js'],
 			css: ['<%= yeoman.dist %>/styles/{,*/}*.css']
 		},
 		imagemin: {
@@ -294,6 +295,8 @@ module.exports = function (grunt) {
 					dest: '<%= yeoman.dist %>',
 					src: [
 						'*.{ico,png,txt}',
+						'scripts/{,*/*}.js',
+						'styles/{,*/*}.css',
 						'.htaccess',
 						'images/{,*/}*.{webp,gif}',
 						'styles/fonts/{,*/}*.*',
@@ -322,7 +325,7 @@ module.exports = function (grunt) {
 		concurrent: {
 			server: [
 				'compass',
-				//'coffee:server',
+				'coffee:server',
 				'copy:styles',
 				'jade:server'
 			],
@@ -331,6 +334,8 @@ module.exports = function (grunt) {
 			],
 			dist: [
 				'compass',
+				'coffee:dist',
+				'jade:dist',
 				'copy:styles',
 				'imagemin',
 				'svgmin',
@@ -398,14 +403,15 @@ module.exports = function (grunt) {
 	grunt.registerTask('build', [
 		'clean:dist',
 		'useminPrepare',
-		'concurrent:dist',
 		'autoprefixer',
-		'concat',
-		'cssmin',
-		'uglify',
-		'modernizr',
+		//'concat',
+		//'cssmin',
+		//'uglify',
+		//'modernizr',
+		
+		'concurrent:dist',
 		'copy:dist',
-		'rev',
+		//'rev',
 		'usemin'
 	]);
 

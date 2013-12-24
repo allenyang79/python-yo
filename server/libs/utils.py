@@ -1,5 +1,18 @@
 #utils for test
 import sys,os,re
+import email
+import json
+import logging
+import math
+import smtplib
+import time
+import uuid
+import base64
+
+from string import maketrans
+from flask import Flask
+from flask import request
+from flask.ext.login import current_user
 from flask import Flask,request,url_for,send_from_directory,current_app
 from werkzeug.exceptions import NotFound
 
@@ -39,6 +52,7 @@ class Livereload_Middleware(object):
 			output+=line
 		if hasattr(app_iter, 'close'):
 			app_iter.close()
+		print self.lr_snippet
 		output=re.sub("(<\/body>)",self.lr_snippet+"\\1",output)
 
 		#header and body
@@ -68,8 +82,8 @@ class Static_Assets_Middleware(object):
 		return self.app(environ,start_response)
 		
 ###
-#   map static folder with yeoman
-#   map static file to yeoman app folder or .tmp folder
+#	map static folder with yeoman
+#	map static file to yeoman app folder or .tmp folder
 ###
 class Static_Assets_Flask(Flask):
 	#overwrite static file mapping for develop
@@ -91,3 +105,59 @@ class Static_Assets_Flask(Flask):
 				r=send_from_directory(folder, filename,cache_timeout=cache_timeout)
 				return r
 		raise NotFound()
+
+
+
+###
+# create extract by request
+###
+def extractRequest(rules):
+	print "extractRequest"
+	ret = {}
+	for field, rule in rules.iteritems():
+		conf = rule.get('inputConfig', {})
+		if conf.get("mustReject", False):
+			continue
+		"""
+		if conf.get("mustAccept", False):
+			pass
+		elif current_user.has_permission(conf.get("needPermission", [])):
+			pass
+		else:
+			continue
+		"""
+		if field in request.values:
+			t = conf.get('type', 'str')
+			if t == "int":
+				ret[field] = force_int(request.values[field])
+			elif t == "float":
+				ret[field] = force_float(request.values[field])
+			elif t == "json":
+				ret[field] = loadObject(field)
+			elif t == 'boolean':
+				if request.values.get(field) == 'true':
+					ret[field] = True
+				else:
+					ret[field] = False
+			else: # default to str
+				ret[field] = request.values[field]
+			if 'possibleValue' in conf:
+				if ret[field] not in conf['possibleValue']:
+					del ret[field]
+		elif "default" in conf:
+			if hasattr(conf["default"], '__call__'):
+				ret[field] = conf["default"]()
+			else:
+				ret[field] = conf["default"]
+	return ret
+
+
+
+###
+# get uuid
+###
+def getUUID():
+	ret = base64.urlsafe_b64encode(uuid.uuid4().bytes)[:-2]
+	if ret[0] == "-":
+		ret = random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) + ret[1:]
+	return ret
