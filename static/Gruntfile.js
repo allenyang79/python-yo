@@ -288,21 +288,24 @@ module.exports = function (grunt) {
 		// Put files not handled in other tasks here
 		copy: {
 			dist: {
-				files: [{
-					expand: true,
-					dot: true,
-					cwd: '<%= yeoman.app %>',
-					dest: '<%= yeoman.dist %>',
-					src: [
-						'*.{ico,png,txt}',
-						'scripts/{,*/*}.js',
-						'styles/{,*/*}.css',
-						'.htaccess',
-						'images/{,*/}*.{webp,gif}',
-						'styles/fonts/{,*/}*.*',
-						'bower_components/sass-bootstrap/fonts/*.*'
-					]
-				}]
+				files: [
+					{
+						expand: true,
+						dot: true,
+						cwd: '<%= yeoman.app %>',
+						dest: '<%= yeoman.dist %>',
+						src: [
+							'*.{ico,png,txt}',
+							'scripts/{,*/*}.js',
+							'plugins/**.js',
+							'styles/{,*/*}.css',
+							//'.htaccess',
+							'images/{,*/}*.{webp,gif}',
+							//'styles/fonts/{,*/}*.*',
+							//'bower_components/sass-bootstrap/fonts/*.*'
+						]
+					}
+				]
 			},
 			styles: {
 				expand: true,
@@ -412,7 +415,7 @@ module.exports = function (grunt) {
 		'concurrent:dist',
 		'copy:dist',
 		//'rev',
-		'usemin'
+		//'usemin'
 	]);
 
 	grunt.registerTask('default', [
